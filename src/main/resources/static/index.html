@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>人脸考勤终端</title>
+    <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<header>
+    <div><span class="eyebrow">WEISHI · USB FACE TERMINAL</span>
+        <h1>人脸视频考勤</h1>
+        <p>DS-UVC-E12 · Java 本地识别 · 云端人脸库</p></div>
+    <button id="refresh">同步云端模板</button>
+</header>
+<main>
+    <section class="card live">
+        <div class="section-title"><h2>实时画面</h2></div>
+        <div class="video">
+            <canvas id="camera" width="640" height="480" aria-label="实时摄像头画面"></canvas>
+            <div id="cameraNotice">正在连接摄像头</div>
+            <canvas id="boxes"></canvas>
+        </div>
+        <div class="recognition"><strong id="message">加载状态中…</strong><span id="identity"></span></div>
+        <div class="meta" id="cameraState"></div>
+    </section>
+    <section class="card"><h2>运行状态</h2>
+        <dl>
+            <dt>云端模板</dt>
+            <dd id="cloudState">—</dd>
+            <dt>缓存更新时间</dt>
+            <dd id="cacheTime">—</dd>
+            <dt>可用人脸模板</dt>
+            <dd id="templates">—</dd>
+            <dt>云端打卡补传</dt>
+            <dd id="cloudSync">—</dd>
+            <dt>第三方系统</dt>
+            <dd id="remoteSync">—</dd>
+        </dl>
+        <p class="note">普通 RGB 摄像头识别不包含活体检测。停用员工在同步后生效；缓存超过有效期将暂停识别。</p>
+        <div id="notice" role="status"></div>
+    </section>
+    <section class="card"><h2>登记员工人脸</h2>
+        <p class="note">员工 ID 必须使用第三方考勤系统的唯一 ID。每人最多登记 5 张清晰照片。</p>
+        <form id="enroll"><label>员工 ID<input name="employeeId" required maxlength="64"
+                                               placeholder="如 E10001"></label><label>姓名<input name="name" required
+                                                                                                 maxlength="100"
+                                                                                                 placeholder="员工姓名"></label><label>照片（上传登记时选择）<input
+                name="file" type="file" accept="image/jpeg,image/png"></label>
+            <div class="actions">
+                <button type="submit">从摄像头登记</button>
+                <button type="button" id="upload">上传照片登记</button>
+                <button type="button" id="check">照片识别测试</button>
+            </div>
+        </form>
+        <p class="note">登记时请正对摄像头并保持画面清晰。登记需要连接云端数据库。</p></section>
+    <section class="card"><h2>员工人脸库</h2>
+        <div class="scroll">
+            <table>
+                <thead>
+                <tr>
+                    <th>员工 ID</th>
+                    <th>姓名</th>
+                    <th>模板</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="employees"></tbody>
+            </table>
+        </div>
+    </section>
+    <section class="card wide">
+        <div class="section-title"><h2>最近 100 条打卡记录</h2><span id="count"></span></div>
+        <div class="scroll">
+            <table>
+                <thead>
+                <tr>
+                    <th>打卡时间</th>
+                    <th>员工</th>
+                    <th>类型</th>
+                    <th>相似度</th>
+                    <th>云端</th>
+                    <th>第三方</th>
+                    <th>备注 / 操作</th>
+                </tr>
+                </thead>
+                <tbody id="events"></tbody>
+            </table>
+        </div>
+        <p class="note">“已记录”代表本地已持久化；“已同步”代表对应系统已确认。未启用第三方接口时，记录会保留等待配置。</p>
+    </section>
+</main>
+<footer>模型：YuNet + SFace · 时间按浏览器本地时区显示 · 原始记录保存 UTC</footer>
+<script src="/preview.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

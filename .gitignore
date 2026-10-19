@@ -1,0 +1,6 @@
+target/
+data/
+config/env.sh
+config/env.ps1
+*.log
+face-attendance.jar
